@@ -1,10 +1,12 @@
 import { useState } from "react";
 import Card from "./componants/Card";
 import CardDetail from "./componants/CardDetail";
+import SearchBar from "./componants/SearchBar";
 
 function App() {
   const [count, setCount] = useState(0);
   const [selectedProduct, setSelectedProduct] = useState(null); // To store the selected product
+  const [searchQuery, setSearchQuery] = useState(""); // To store search query
 
   let products = [
     {
@@ -39,6 +41,10 @@ function App() {
     },
   ];
 
+  const filteredProducts = products.filter(product =>
+    product.productName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   const openModal = (product) => {
     setSelectedProduct(product); // Set the selected product to open modal
   };
@@ -49,19 +55,24 @@ function App() {
 
   return (
     <>
+      <SearchBar onSearch ={(query)=> setSearchQuery(query)}/>
       <section className="text-gray-600 body-font">
         <div className="container px-5 py-24 mx-auto">
           <div className="flex flex-wrap -m-4">
-            {products.map((product, index) => (
-              <Card
-                id={index}
-                key={index}
-                image={product.productImage}
-                title={product.productName}
-                price={product.productPrice}
-                onClick={() => openModal(product)}
-              />
-            ))}
+          {filteredProducts.length > 0 ? (
+              filteredProducts.map((product, index) => (
+                <Card
+                  id={index}
+                  key={index}
+                  image={product.productImage}
+                  title={product.productName}
+                  price={product.productPrice}
+                  onClick={() => openModal(product)}
+                />
+              ))
+            ) : (
+              <div className="w-full text-center py-8 text-gray-500">No products found</div>
+            )}
           </div>
         </div>
       </section>
@@ -69,8 +80,8 @@ function App() {
       {selectedProduct && (
         <CardDetail
           image={selectedProduct.productImage}
-          productName={selectedProduct.className}
-          productPrice={selectedProduct.classproductPrice}
+          productName={selectedProduct.productName}
+          productPrice={selectedProduct.productPrice}
           onClick={() => closeModal(null)}
         />
       )}
