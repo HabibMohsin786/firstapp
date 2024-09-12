@@ -28,19 +28,25 @@ function SignIn() {
               placeholder="Enter your password"
             />
           </div>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col">
             <button
               className=" bg-purple-500 text-white rounded-lg hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-400 py-2 px-4"
               type="button"
             >
               Sign In
             </button>
-            <a
-              className="inline-block align-baseline font-bold text-sm text-purple-400 hover:text-purple-700"
-              href="#"
+            <p
+              className="flex justify-center  align-middle font-bold text-sm text-purple-700"
+
             >
-              Forgot Password?
-            </a>
+              OR
+            </p>
+            <button
+              className=" bg-purple-500 text-white rounded-lg hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-400 py-2 px-4"
+              type="button"
+            >
+              Sign In With Google
+            </button>
           </div>
         </form>
         <p className="text-center text-purple-700 text-sm mt-6">

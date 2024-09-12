@@ -9,9 +9,11 @@ import ProductDetails from "./pages/ProductDetails";
 import SignIn from "./pages/SingIn";
 import SignUp from "./pages/SingIUp";
 
+
 function App() {
   return (
     <>
+
       <BrowserRouter>
       <Header/>
         <Routes>
