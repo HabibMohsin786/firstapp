@@ -61,14 +61,24 @@ export default function Header() {
 
       <NavbarContent justify="end">
         <NavbarItem className="hidden lg:flex">
-        <Button as={Link} color="warning" href="/signin" variant="flat">
+        <Link href="/signin">
+        <button
+            className=" bg-purple-500 text-white rounded-lg hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-400 py-2 px-4"
+            type="button"
+          >
             Sign In
-          </Button>
+          </button>
+        </Link>
         </NavbarItem>
         <NavbarItem>
-          <Button as={Link} color="warning" href="/signup" variant="flat">
+        <Link href="/signUp">
+        <button
+            className=" bg-purple-500 text-white rounded-lg hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-400 py-2 px-4"
+            type="button"
+          >
             Sign Up
-          </Button>
+          </button>
+        </Link>
         </NavbarItem>
       </NavbarContent>
 
