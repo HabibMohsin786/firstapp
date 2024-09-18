@@ -61,6 +61,7 @@ function Products() {
 
               <div className="flex flex-wrap -m-4 my-4 gap-2">
                 <CategoryChips
+                 onClick={() => setChoisenCategory("All")}
                   isChosen={choisenCategory === "All"}
                   category={{
                     slug: "All",

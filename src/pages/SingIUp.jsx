@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 import { Input, Button } from "@nextui-org/react";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../utils/firebase";
+import { useNavigate } from "react-router";
+
 export const EyeSlashFilledIcon = (props) => (
   <svg
     aria-hidden="true"
@@ -60,8 +64,57 @@ function SignUp() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate()
 
+
+  const handleSignUp = () => {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed up 
+        const user = userCredential.user;
+        // ...
+
+        navigate("/")
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ..
+        console.log("Error Code ->", errorCode);
+        console.log("Error Message ->", errorMessage);
+
+      });
+  }
   const toggleVisibility = () => setIsVisible(!isVisible);
+
+  const handleSignInWithGoogle = () => {
+    const provider = new GoogleAuthProvider();
+    provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        // The signed-in user info.
+        const user = result.user;
+        // IdP data available using getAdditionalUserInfo(result)
+        // ...
+        navigate("/")
+
+      }).catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+        console.log('Error Message ->', errorMessage);
+        console.log('Error Code ->', errorCode);
+
+      });
+  }
   return (
     <div className="flex items-center justify-center min-h-screen  p-5">
       <div className="bg-purple-50 p-8 rounded-lg shadow-md w-full max-w-md">
@@ -72,7 +125,7 @@ function SignUp() {
           <Input
             label="Full Name"
             value={name}
-            onChange={(e)=> setName(e.target.value)}
+            onChange={(e) => setName(e.target.value)}
             variant="bordered"
             placeholder="Enter your Full Name"
             className="w-full h-12 "
@@ -84,7 +137,7 @@ function SignUp() {
             variant="bordered"
             placeholder="Enter your email"
             className="w-full h-12 "
-            />
+          />
           <Input
             label="Password"
             value={password}
@@ -110,11 +163,14 @@ function SignUp() {
           />
         </div>
         <div className="flex flex-col my-3">
-          <Button color="secondary">Sign Up</Button>
+          <Button
+            onClick={handleSignUp}
+            color="secondary"
+          >Sign Up</Button>
           <p className="flex justify-center  align-middle font-bold text-sm text-purple-700 my-2">
             OR
           </p>
-          <Button color="secondary">Sign Up With Google</Button>
+          <Button color="secondary" onClick={handleSignInWithGoogle}>Sign Up With Google</Button>
         </div>
 
         <p className="text-center text-purple-700 text-sm mt-6">

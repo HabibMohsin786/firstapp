@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Input } from "@nextui-org/react";
-import { GoogleAuthProvider,signInWithPopup } from "firebase/auth";
+import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth } from "../utils/firebase";
+import { useNavigate } from "react-router";
+
 export const EyeSlashFilledIcon = (props) => (
   <svg
     aria-hidden="true"
@@ -62,35 +64,55 @@ function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const toggleVisibility = () => setIsVisible(!isVisible);
+  const navigate = useNavigate()
 
-const handleSignInWithGoogle = ()=>{
-  const provider = new GoogleAuthProvider();
-  provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
-  signInWithPopup(auth, provider)
-  .then((result) => {
-    // This gives you a Google Access Token. You can use it to access the Google API.
-    const credential = GoogleAuthProvider.credentialFromResult(result);
-    const token = credential.accessToken;
-    // The signed-in user info.
-    const user = result.user;
-    // IdP data available using getAdditionalUserInfo(result)
-    // ...
-    console.log("User ->", user );
-    
-  }).catch((error) => {
-    // Handle Errors here.
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // The email of the user's account used.
-    const email = error.customData.email;
-    // The AuthCredential type that was used.
-    const credential = GoogleAuthProvider.credentialFromError(error);
-    // ...
-    console.log( 'Error Message ->',errorMessage);
-    console.log( 'Error Code ->',errorCode);
-    
-  });
-}
+  const handleSgnIn = () => {
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        // ...
+        console.log("LodIn User ->", user);
+        navigate("/")
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log("Error Code ->", errorCode);
+        console.log("Error Message ->", errorMessage);
+
+      });
+  }
+
+
+  const handleSignInWithGoogle = () => {
+    const provider = new GoogleAuthProvider();
+    provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        // The signed-in user info.
+        const user = result.user;
+        // IdP data available using getAdditionalUserInfo(result)
+        // ...
+        console.log("User ->", user);
+        navigate("/")
+      }).catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+        console.log('Error Message ->', errorMessage);
+        console.log('Error Code ->', errorCode);
+
+      });
+  }
   return (
     <div className="flex items-center justify-center min-h-screen  p-5">
       <div className="bg-purple-50 p-8 rounded-lg shadow-md w-full max-w-md">
@@ -99,8 +121,8 @@ const handleSignInWithGoogle = ()=>{
         </h2>
         <div className="space-y-4 my-3">
           <Input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             label="Email"
             variant="bordered"
             placeholder="Enter your email"
@@ -132,6 +154,7 @@ const handleSignInWithGoogle = ()=>{
         </div>
         <div className="flex flex-col my-3">
           <button
+            onClick={handleSgnIn}
             className=" bg-purple-500 text-white rounded-lg hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-400 py-2 px-4"
             type="button"
           >
@@ -141,7 +164,7 @@ const handleSignInWithGoogle = ()=>{
             OR
           </p>
           <button
-          onClick={handleSignInWithGoogle}
+            onClick={handleSignInWithGoogle}
             className=" bg-purple-500 text-white rounded-lg hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-400 py-2 px-4"
             type="button"
           >
