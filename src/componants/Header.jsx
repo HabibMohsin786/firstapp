@@ -58,7 +58,7 @@ const handleLogOut=()=>{
           <p className="font-bold text-inherit">ACME</p>
         </NavbarBrand>
         <NavbarItem isActive={location.pathname === "/products"}>
-          <Link color="foreground" href="/products">
+          <Link href="/products">
             Products
           </Link>
         </NavbarItem>
